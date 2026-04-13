@@ -1,3 +1,4 @@
 bt4221projvenv/
 .DS_Store
 .env
+.venv*
