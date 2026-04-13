@@ -1,0 +1,89 @@
+{
+  "cleaning": {
+    "drop_columns": [
+      "review_id",
+      "author_steamid"
+    ],
+    "missing_strategy": "impute_median",
+    "sampling_strategy": "stratified_proportional",
+    "reasoning": "The columns 'review_id' and 'author_steamid' are IDs that don't provide predictive value for the classification task, so they can be safely dropped. The column 'author_playtime_at_review' has a missing percentage of 12.37%, which is manageable for imputation, and using median is preferred due to the skewed distribution of playtime data. To sample the dataset down to ~500MB, 'stratified_proportional' will maintain the original class distribution, which is important given the significant imbalance in the dataset (approximately 89% positive reviews), ensuring the model can learn effectively from both classes."
+  },
+  "feature_engineering": {
+    "feature_families_to_apply": [
+      "text_structure",
+      "log_transforms",
+      "ratio_features",
+      "app_level_contextual",
+      "temporal",
+      "missingness_flags",
+      "tfidf"
+    ],
+    "features_to_exclude": [
+      "author_playtime_at_review",
+      "weights_vote_score_missing"
+    ],
+    "models": [
+      "RandomForestClassifier",
+      "LogisticRegression"
+    ],
+    "evaluation_metrics": [
+      "f1",
+      "areaUnderROC"
+    ],
+    "use_smote": false,
+    "reasoning": "The feature families chosen are relevant based on the dataset characteristics. 'text_structure' captures the nuances of the review text. 'log_transforms' are appropriate due to the high skewness in numerous numerical columns, helping to normalize the distributions. 'ratio_features' allow for comparative assessments that leverage numerical features effectively, such as playtime and review counts. 'app_level_contextual' provides aggregate insights about the game, which can inform the individual review in terms of overall app performance. 'temporal' addresses the timing aspects of reviews, potentially influencing sentiment. 'missingness_flags' can capture patterns in the presence of data, which could relate to how reviews are constructed or perceived. The 'tfidf' feature captures the text's semantic richness and variability, crucial for sentiment analysis. The features excluded have high multicollinearity or are less likely to provide additional predictive value. The selected models, RandomForestClassifier and LogisticRegression, are robust to various data shapes and distributions and are strong for interpretability and performance, respectively. Evaluation metrics focus on f1 for balancing precision and recall in the prediction of the minority class, and areaUnderROC for understanding the model's ability to discriminate between classes. SMOTE is unnecessary due to the ability to implement other techniques on the unbalanced class distribution without generating synthetic data."
+  },
+  "dense_feature_cols": [
+    "review_char_count",
+    "review_word_count",
+    "review_sentence_count",
+    "exclamation_count",
+    "question_count",
+    "digit_count",
+    "has_exclamation",
+    "has_question",
+    "long_review_flag",
+    "very_short_review_flag",
+    "avg_sentence_length",
+    "log1p_votes_helpful",
+    "log1p_votes_funny",
+    "log1p_comment_count",
+    "log1p_author_num_games_owned",
+    "log1p_author_num_reviews",
+    "log1p_author_playtime_forever",
+    "log1p_author_playtime_last_two_weeks",
+    "log1p_author_playtime_at_review",
+    "weighted_vote_score",
+    "funny_to_helpful_ratio",
+    "reviews_to_games_ratio",
+    "recent_to_total_playtime_ratio",
+    "words_per_playtime",
+    "helpful_per_word",
+    "comment_per_word",
+    "playtime_per_game_owned",
+    "steam_purchase",
+    "received_for_free",
+    "written_during_early_access",
+    "created_year",
+    "created_month",
+    "created_dayofweek",
+    "is_weekend_review",
+    "review_edit_gap_seconds",
+    "review_edited_flag",
+    "time_since_last_played_seconds",
+    "app_review_count",
+    "app_recommend_rate",
+    "app_avg_review_word_count",
+    "app_avg_votes_helpful",
+    "votes_helpful_missing",
+    "votes_funny_missing",
+    "weighted_vote_score_missing",
+    "comment_count_missing",
+    "author_num_games_owned_missing",
+    "author_num_reviews_missing",
+    "author_playtime_forever_missing",
+    "author_playtime_last_two_weeks_missing",
+    "author_playtime_at_review_missing",
+    "author_last_played_missing"
+  ]
+}
