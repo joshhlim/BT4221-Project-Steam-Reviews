@@ -1,89 +1,299 @@
 {
   "cleaning": {
-    "drop_columns": [
-      "review_id",
-      "author_steamid"
-    ],
-    "missing_strategy": "impute_median",
-    "sampling_strategy": "stratified_proportional",
-    "reasoning": "The columns 'review_id' and 'author_steamid' are IDs that don't provide predictive value for the classification task, so they can be safely dropped. The column 'author_playtime_at_review' has a missing percentage of 12.37%, which is manageable for imputation, and using median is preferred due to the skewed distribution of playtime data. To sample the dataset down to ~500MB, 'stratified_proportional' will maintain the original class distribution, which is important given the significant imbalance in the dataset (approximately 89% positive reviews), ensuring the model can learn effectively from both classes."
+    "raw": {
+      "reasoning": "The dataset contains a significant number of rows and various columns that may require cleaning to ensure the quality and reliability of the machine learning model. Observations such as missing values, duplicates, class imbalance, and outlier presence indicate the need for specific cleaning steps. Each decision is based on the statistics provided, aiming to enhance data integrity and model performance.",
+      "decisions": {
+        "missing_values": {
+          "observations": "The 'review' column has 16,750 missing values, which is about 1.73% of the total rows. Additionally, 'author_playtime_at_review' has 11,847 missing values (0.12%).",
+          "action": "Remove rows with missing values in the 'review' column, as this is critical for the classification task. For 'author_playtime_at_review', consider imputing missing values with the median or mean.",
+          "justification": "Removing rows with missing reviews ensures that all remaining data points are valid for the classification task. Imputing 'author_playtime_at_review' helps retain more data while minimizing bias."
+        },
+        "duplicate_handling": {
+          "observations": "There are 54,769 exact duplicates and 55,027 duplicate user-app pairs.",
+          "action": "Remove all exact duplicate rows and keep only one instance of each duplicate user-app pair.",
+          "justification": "Duplicates can skew the model's learning process, leading to overfitting. Removing them ensures that each review is unique and contributes equally to the training process."
+        },
+        "class_imbalance": {
+          "observations": "The class distribution is heavily imbalanced, with 8,584,444 positive reviews (recommended=1) and 1,050,993 negative reviews (recommended=0).",
+          "action": "Apply techniques such as oversampling the minority class (negative reviews) or undersampling the majority class (positive reviews) to achieve a more balanced dataset.",
+          "justification": "Class imbalance can lead to a model that is biased towards the majority class. Balancing the classes helps improve the model's ability to generalize and accurately predict both classes."
+        },
+        "outlier_handling": {
+          "observations": "Several numeric columns, such as 'votes_helpful' and 'author_num_games_owned', show extreme skewness and high kurtosis, indicating the presence of outliers.",
+          "action": "Identify and potentially remove or cap extreme outliers in numeric columns based on domain knowledge or statistical methods (e.g., z-score or IQR).",
+          "justification": "Outliers can disproportionately influence model training, leading to poor performance. Handling them ensures that the model learns from the majority of the data without being misled by extreme values."
+        },
+        "column_removal": {
+          "observations": "Columns like 'app_id', 'app_name', and 'review_id' may not provide predictive power for the classification task.",
+          "action": "Consider removing 'app_id', 'app_name', and 'review_id' as they are identifiers and may not contribute to the model's predictive capabilities.",
+          "justification": "Reducing dimensionality by removing non-predictive columns can improve model performance and reduce training time."
+        },
+        "data_type_conversion": {
+          "observations": "Some numeric columns are stored as doubles, which may not be necessary.",
+          "action": "Convert appropriate columns (e.g., 'steam_purchase', 'received_for_free', 'written_during_early_access') to integers if they represent categorical data.",
+          "justification": "Using the correct data types can optimize memory usage and improve model performance."
+        }
+      }
+    },
+    "validated": {
+      "duplicate_handling": {
+        "exact_duplicates": {
+          "action": "drop"
+        },
+        "duplicate_review_ids": {
+          "action": "skip"
+        },
+        "duplicate_user_app": {
+          "action": "keep_latest"
+        }
+      },
+      "columns_to_drop": [
+        "app_id",
+        "app_name",
+        "review_id"
+      ],
+      "missing_value_handling": {
+        "review": {
+          "action": "drop_rows"
+        },
+        "author_playtime_at_review": {
+          "action": "impute_median"
+        }
+      },
+      "outlier_handling": [
+        {
+          "column": "votes_helpful",
+          "action": "drop_rows",
+          "threshold": 99
+        },
+        {
+          "column": "author_num_games_owned",
+          "action": "drop_rows",
+          "threshold": 99
+        }
+      ],
+      "sampling": {
+        "method": "stratified_balanced",
+        "seed": 42
+      },
+      "unresolvable": [],
+      "translation_notes": "The decisions were mapped as follows: For duplicate handling, exact duplicates are dropped, while duplicate user-app pairs are kept with the latest instance. Columns identified as non-predictive are dropped. Missing values in the 'review' column are dropped, while 'author_playtime_at_review' is imputed with the median. Outliers in specified numeric columns are dropped based on a 99th percentile threshold. Class imbalance is addressed through stratified sampling to balance the classes. No decisions were found unresolvable."
+    }
   },
   "feature_engineering": {
-    "feature_families_to_apply": [
-      "text_structure",
-      "log_transforms",
-      "ratio_features",
-      "app_level_contextual",
-      "temporal",
-      "missingness_flags",
-      "tfidf"
+    "raw": {
+      "reasoning": "The dataset contains a variety of features that can be transformed to enhance the predictive power of the model. The review text provides insights into sentiment, but it must be quantitatively represented. The numeric features show significant skewness and class-conditional differences, indicating potential for transformation to improve model performance. Additionally, timestamp features can be transformed to extract meaningful temporal information. The transformations aim to create features that capture the essence of user behavior, review characteristics, and temporal dynamics.",
+      "transformations": [
+        {
+          "description": "Calculate the length of each review in characters.",
+          "input_columns": ["review"],
+          "output_column": "review_length_chars",
+          "operation": "len(review)",
+          "justification": "The mean length of positive reviews is significantly shorter than that of negative reviews, indicating that review length may correlate with sentiment."
+        },
+        {
+          "description": "Calculate the length of each review in words.",
+          "input_columns": ["review"],
+          "output_column": "review_length_words",
+          "operation": "len(review.split())",
+          "justification": "Similar to character length, word count can provide insights into sentiment, as positive reviews tend to be shorter on average."
+        },
+        {
+          "description": "Count the number of punctuation marks in each review.",
+          "input_columns": ["review"],
+          "output_column": "punctuation_count",
+          "operation": "sum(1 for char in review if char in string.punctuation)",
+          "justification": "Punctuation usage may indicate emotional intensity or sentiment, which can be relevant for classification."
+        },
+        {
+          "description": "Count the number of exclamation marks in each review.",
+          "input_columns": ["review"],
+          "output_column": "exclamation_count",
+          "operation": "sum(1 for char in review if char == '!')",
+          "justification": "Exclamation marks can indicate strong sentiment, which may correlate with positive or negative reviews."
+        },
+        {
+          "description": "Count the number of question marks in each review.",
+          "input_columns": ["review"],
+          "output_column": "question_count",
+          "operation": "sum(1 for char in review if char == '?')",
+          "justification": "Questions may reflect uncertainty or critique, which could be associated with negative sentiment."
+        },
+        {
+          "description": "Extract the timestamp of when the review was created and convert it to a datetime object.",
+          "input_columns": ["timestamp_created"],
+          "output_column": "review_created_datetime",
+          "operation": "datetime.fromtimestamp(timestamp_created)",
+          "justification": "Converting timestamps to datetime allows for further temporal analysis, such as extracting features like review age."
+        },
+        {
+          "description": "Calculate the age of the review in days.",
+          "input_columns": ["review_created_datetime"],
+          "output_column": "review_age_days",
+          "operation": "(current_date - review_created_datetime).days",
+          "justification": "Review age may influence sentiment, as more recent reviews could reflect current game quality."
+        },
+        {
+          "description": "Calculate the ratio of helpful votes to total votes.",
+          "input_columns": ["votes_helpful", "votes_funny"],
+          "output_column": "helpfulness_ratio",
+          "operation": "votes_helpful / (votes_helpful + votes_funny + 1)",
+          "justification": "This ratio can provide a normalized measure of how helpful a review is perceived to be, which may correlate with sentiment."
+        },
+        {
+          "description": "Create a binary feature indicating whether the review was written during early access.",
+          "input_columns": ["written_during_early_access"],
+          "output_column": "is_early_access_review",
+          "operation": "written_during_early_access",
+          "justification": "Reviews written during early access may have different sentiment characteristics compared to those written after full release."
+        },
+        {
+          "description": "Drop the raw review text column after extracting features.",
+          "input_columns": ["review"],
+          "output_column": null,
+          "operation": "drop column",
+          "justification": "The raw review text is no longer needed after extracting numerical features and could cause errors if included in the model."
+        }
+      ]
+    },
+    "validated": {
+      "validated_transformations": [
+        {
+          "type": "text_length",
+          "input": "review",
+          "unit": "chars",
+          "output": "review_length_chars"
+        },
+        {
+          "type": "text_length",
+          "input": "review",
+          "unit": "words",
+          "output": "review_length_words"
+        },
+        {
+          "type": "text_count",
+          "input": "review",
+          "pattern": "[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]",
+          "output": "punctuation_count"
+        },
+        {
+          "type": "text_count",
+          "input": "review",
+          "pattern": "!",
+          "output": "exclamation_count"
+        },
+        {
+          "type": "text_count",
+          "input": "review",
+          "pattern": "\\?",
+          "output": "question_count"
+        },
+        {
+          "type": "datetime_extract",
+          "input": "timestamp_created",
+          "extract": "year",
+          "output": "review_created_datetime"
+        },
+        {
+          "type": "time_diff",
+          "col_a": "current_date",
+          "col_b": "review_created_datetime",
+          "output": "review_age_days"
+        },
+        {
+          "type": "ratio",
+          "numerator": "votes_helpful",
+          "denominator": "votes_helpful + votes_funny",
+          "output": "helpfulness_ratio",
+          "smoothing": 1
+        },
+        {
+          "type": "binary_flag",
+          "input": "written_during_early_access",
+          "condition": "eq",
+          "threshold": 1,
+          "output": "is_early_access_review"
+        },
+        {
+          "type": "drop_column",
+          "input": "review"
+        }
+      ],
+      "unresolvable": [],
+      "translation_notes": "Each transformation was mapped to the closest matching instruction type based on the description provided. For example, text length calculations were mapped to 'text_length', while counting specific characters was mapped to 'text_count'. The datetime extraction and time difference calculations were mapped to 'datetime_extract' and 'time_diff', respectively. The binary flag for early access reviews was mapped to 'binary_flag', and dropping the review text was mapped to 'drop_column'."
+    },
+    "dense_feature_cols": [
+      "review_length_chars",
+      "review_length_words",
+      "punctuation_count",
+      "exclamation_count",
+      "question_count",
+      "review_created_datetime",
+      "review_age_days",
+      "helpfulness_ratio",
+      "is_early_access_review"
     ],
-    "features_to_exclude": [
-      "author_playtime_at_review",
-      "weights_vote_score_missing"
-    ],
-    "models": [
-      "RandomForestClassifier",
-      "LogisticRegression"
-    ],
-    "evaluation_metrics": [
-      "f1",
-      "areaUnderROC"
-    ],
-    "use_smote": false,
-    "reasoning": "The feature families chosen are relevant based on the dataset characteristics. 'text_structure' captures the nuances of the review text. 'log_transforms' are appropriate due to the high skewness in numerous numerical columns, helping to normalize the distributions. 'ratio_features' allow for comparative assessments that leverage numerical features effectively, such as playtime and review counts. 'app_level_contextual' provides aggregate insights about the game, which can inform the individual review in terms of overall app performance. 'temporal' addresses the timing aspects of reviews, potentially influencing sentiment. 'missingness_flags' can capture patterns in the presence of data, which could relate to how reviews are constructed or perceived. The 'tfidf' feature captures the text's semantic richness and variability, crucial for sentiment analysis. The features excluded have high multicollinearity or are less likely to provide additional predictive value. The selected models, RandomForestClassifier and LogisticRegression, are robust to various data shapes and distributions and are strong for interpretability and performance, respectively. Evaluation metrics focus on f1 for balancing precision and recall in the prediction of the minority class, and areaUnderROC for understanding the model's ability to discriminate between classes. SMOTE is unnecessary due to the ability to implement other techniques on the unbalanced class distribution without generating synthetic data."
+    "skipped_instructions": []
   },
-  "dense_feature_cols": [
-    "review_char_count",
-    "review_word_count",
-    "review_sentence_count",
-    "exclamation_count",
-    "question_count",
-    "digit_count",
-    "has_exclamation",
-    "has_question",
-    "long_review_flag",
-    "very_short_review_flag",
-    "avg_sentence_length",
-    "log1p_votes_helpful",
-    "log1p_votes_funny",
-    "log1p_comment_count",
-    "log1p_author_num_games_owned",
-    "log1p_author_num_reviews",
-    "log1p_author_playtime_forever",
-    "log1p_author_playtime_last_two_weeks",
-    "log1p_author_playtime_at_review",
-    "weighted_vote_score",
-    "funny_to_helpful_ratio",
-    "reviews_to_games_ratio",
-    "recent_to_total_playtime_ratio",
-    "words_per_playtime",
-    "helpful_per_word",
-    "comment_per_word",
-    "playtime_per_game_owned",
-    "steam_purchase",
-    "received_for_free",
-    "written_during_early_access",
-    "created_year",
-    "created_month",
-    "created_dayofweek",
-    "is_weekend_review",
-    "review_edit_gap_seconds",
-    "review_edited_flag",
-    "time_since_last_played_seconds",
-    "app_review_count",
-    "app_recommend_rate",
-    "app_avg_review_word_count",
-    "app_avg_votes_helpful",
-    "votes_helpful_missing",
-    "votes_funny_missing",
-    "weighted_vote_score_missing",
-    "comment_count_missing",
-    "author_num_games_owned_missing",
-    "author_num_reviews_missing",
-    "author_playtime_forever_missing",
-    "author_playtime_last_two_weeks_missing",
-    "author_playtime_at_review_missing",
-    "author_last_played_missing"
-  ]
+  "model_config": {
+    "raw": {
+      "reasoning": "Given the task of binary classification for Steam reviews, we need models that can handle both dense numerical features and interpret text-based metadata effectively. The dataset is relatively large, with a balanced class distribution, which allows us to leverage models that can provide clear feature importance insights. Linear models like Logistic Regression and tree-based models like Random Forest are suitable choices. Logistic Regression offers interpretability through coefficients, while Random Forest provides Gini importance, making both models ideal for understanding the driving factors behind review classifications.",
+      "model_1": {
+        "name": "Logistic Regression",
+        "why_chosen": "Logistic Regression is well-suited for binary classification tasks and provides interpretable coefficients that indicate the influence of each feature on the prediction. Given the presence of dense features and the need for interpretability, this model allows us to understand how each feature contributes to the likelihood of a review being positive or negative.",
+        "hyperparameter_configs": [
+          {"C": 0.01, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
+          {"C": 0.1, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
+          {"C": 1.0, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
+          {"C": 10.0, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
+          {"C": 1.0, "solver": "saga", "max_iter": 100, "penalty": "l2"}
+        ]
+      },
+      "model_2": {
+        "name": "Random Forest Classifier",
+        "why_chosen": "Random Forest is a robust ensemble method that can handle both dense and sparse features effectively. It provides Gini importance scores, which help in understanding the contribution of each feature to the model's predictions. This model is particularly useful for capturing non-linear relationships in the data while still allowing for interpretability through feature importance analysis.",
+        "hyperparameter_configs": [
+          {"n_estimators": 100, "max_depth": 10, "min_samples_split": 2, "min_samples_leaf": 1, "max_features": "sqrt"},
+          {"n_estimators": 200, "max_depth": 15, "min_samples_split": 2, "min_samples_leaf": 1, "max_features": "sqrt"},
+          {"n_estimators": 100, "max_depth": 20, "min_samples_split": 5, "min_samples_leaf": 2, "max_features": "log2"},
+          {"n_estimators": 150, "max_depth": 10, "min_samples_split": 10, "min_samples_leaf": 1, "max_features": "sqrt"},
+          {"n_estimators": 300, "max_depth": 5, "min_samples_split": 2, "min_samples_leaf": 1, "max_features": "sqrt"}
+        ]
+      },
+      "primary_metric": "F1 Score",
+      "primary_metric_justification": "The F1 Score is a balanced measure that considers both precision and recall, making it suitable for evaluating the performance of the models in a binary classification context. It is particularly useful when the cost of false positives and false negatives is similar, which is relevant for understanding the nuances of review classifications.",
+      "handle_imbalance": false
+    },
+    "validated": {
+      "model_1": {
+        "pyspark_class": "LogisticRegression",
+        "original_name": "Logistic Regression",
+        "configs": [
+          {"regParam": 100.0, "maxIter": 100, "elasticNetParam": 0.0},
+          {"regParam": 10.0,  "maxIter": 100, "elasticNetParam": 0.0},
+          {"regParam": 1.0,   "maxIter": 100, "elasticNetParam": 0.0},
+          {"regParam": 0.1,   "maxIter": 100, "elasticNetParam": 0.0},
+          {"regParam": 1.0,   "maxIter": 100, "elasticNetParam": 0.0}
+        ],
+        "mapping_notes": "Mapped 'C' to 'regParam' as the inverse of regularization strength. 'max_iter' is mapped to 'maxIter'. 'penalty' is represented by 'elasticNetParam' where 'l2' corresponds to 0.0."
+      },
+      "model_2": {
+        "pyspark_class": "RandomForestClassifier",
+        "original_name": "Random Forest Classifier",
+        "configs": [
+          {"numTrees": 100, "maxDepth": 10, "minInstancesPerNode": 2,  "featureSubsetStrategy": "sqrt"},
+          {"numTrees": 200, "maxDepth": 15, "minInstancesPerNode": 2,  "featureSubsetStrategy": "sqrt"},
+          {"numTrees": 100, "maxDepth": 10, "minInstancesPerNode": 5,  "featureSubsetStrategy": "log2"},
+          {"numTrees": 150, "maxDepth": 10, "minInstancesPerNode": 10, "featureSubsetStrategy": "sqrt"},
+          {"numTrees": 300, "maxDepth": 5,  "minInstancesPerNode": 2,  "featureSubsetStrategy": "sqrt"}
+        ],
+        "mapping_notes": "Mapped 'n_estimators' to 'numTrees', 'max_depth' to 'maxDepth', 'min_samples_split' to 'minInstancesPerNode', and 'max_features' to 'featureSubsetStrategy'."
+      },
+      "primary_metric": "areaUnderROC",
+      "primary_metric_evaluator": "binary",
+      "secondary_metrics": ["f1", "accuracy"],
+      "unresolvable": [],
+      "translation_notes": "All chosen models and hyperparameters have been successfully mapped to their corresponding PySpark MLlib equivalents. The primary metric is set to areaUnderROC, which is suitable for binary classification tasks."
+    }
+  }
 }
