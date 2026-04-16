@@ -1,258 +1,301 @@
 {
-    "LogisticRegression_all_results": [
-      {
-        "regParam": 100.0,
-        "maxIter": 100,
-        "elasticNetParam": 0.0,
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "regParam": 10.0,
-        "maxIter": 100,
-        "elasticNetParam": 0.0,
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "regParam": 1.0,
-        "maxIter": 100,
-        "elasticNetParam": 0.0,
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "regParam": 0.1,
-        "maxIter": 100,
-        "elasticNetParam": 0.0,
-        "areaUnderROC": 0.6833,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "regParam": 1.0,
-        "maxIter": 100,
-        "elasticNetParam": 0.0,
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      }
-    ],
-    "RandomForestClassifier_all_results": [
-      {
-        "numTrees": 100,
-        "maxDepth": 10,
-        "minInstancesPerNode": 2,
-        "featureSubsetStrategy": "sqrt",
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "numTrees": 200,
-        "maxDepth": 15,
-        "minInstancesPerNode": 2,
-        "featureSubsetStrategy": "sqrt",
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "numTrees": 100,
-        "maxDepth": 10,
-        "minInstancesPerNode": 5,
-        "featureSubsetStrategy": "log2",
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "numTrees": 150,
-        "maxDepth": 10,
-        "minInstancesPerNode": 10,
-        "featureSubsetStrategy": "sqrt",
-        "areaUnderROC": null,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      },
-      {
-        "numTrees": 300,
-        "maxDepth": 5,
-        "minInstancesPerNode": 2,
-        "featureSubsetStrategy": "sqrt",
-        "areaUnderROC": 0.7375,
-        "areaUnderPR": null,
-        "f1": null,
-        "accuracy": null,
-        "weightedPrecision": null,
-        "weightedRecall": null
-      }
-    ],
-    "LogisticRegression_best": {
-      "regParam": 0.1,
+  "LogisticRegression_all_results": [
+    {
+      "regParam": 100.0,
       "maxIter": 100,
       "elasticNetParam": 0.0,
       "areaUnderROC": 0.6833,
-      "areaUnderPR": null,
-      "f1": null,
-      "accuracy": null,
-      "weightedPrecision": null,
-      "weightedRecall": null
+      "areaUnderPR": 0.6662,
+      "f1": 0.5087,
+      "accuracy": 0.5619,
+      "weightedPrecision": 0.6107,
+      "weightedRecall": 0.5619
     },
-    "RandomForestClassifier_best": {
+    {
+      "regParam": 10.0,
+      "maxIter": 100,
+      "elasticNetParam": 0.0,
+      "areaUnderROC": 0.6831,
+      "areaUnderPR": 0.6662,
+      "f1": 0.6055,
+      "accuracy": 0.614,
+      "weightedPrecision": 0.6252,
+      "weightedRecall": 0.614
+    },
+    {
+      "regParam": 0.1,
+      "maxIter": 100,
+      "elasticNetParam": 0.0,
+      "areaUnderROC": 0.682,
+      "areaUnderPR": 0.6653,
+      "f1": 0.6259,
+      "accuracy": 0.6288,
+      "weightedPrecision": 0.6332,
+      "weightedRecall": 0.6288
+    },
+    {
+      "regParam": 1.0,
+      "maxIter": 100,
+      "elasticNetParam": 0.0,
+      "areaUnderROC": 0.6818,
+      "areaUnderPR": 0.6654,
+      "f1": 0.6184,
+      "accuracy": 0.6232,
+      "weightedPrecision": 0.6301,
+      "weightedRecall": 0.6232
+    },
+    {
+      "regParam": 1.0,
+      "maxIter": 100,
+      "elasticNetParam": 0.0,
+      "areaUnderROC": 0.6817,
+      "areaUnderPR": 0.6651,
+      "f1": 0.6184,
+      "accuracy": 0.6232,
+      "weightedPrecision": 0.6301,
+      "weightedRecall": 0.6232
+    }
+  ],
+  "RandomForestClassifier_all_results": [
+    {
+      "numTrees": 200,
+      "maxDepth": 15,
+      "minInstancesPerNode": 2,
+      "featureSubsetStrategy": "sqrt",
+      "areaUnderROC": 0.7375,
+      "areaUnderPR": 0.7235,
+      "f1": 0.6811,
+      "accuracy": 0.6811,
+      "weightedPrecision": 0.6811,
+      "weightedRecall": 0.6811
+    },
+    {
+      "numTrees": 100,
+      "maxDepth": 10,
+      "minInstancesPerNode": 2,
+      "featureSubsetStrategy": "sqrt",
+      "areaUnderROC": 0.7365,
+      "areaUnderPR": 0.7224,
+      "f1": 0.6812,
+      "accuracy": 0.6812,
+      "weightedPrecision": 0.6812,
+      "weightedRecall": 0.6812
+    },
+    {
+      "numTrees": 100,
+      "maxDepth": 10,
+      "minInstancesPerNode": 5,
+      "featureSubsetStrategy": "log2",
+      "areaUnderROC": 0.7365,
+      "areaUnderPR": 0.7222,
+      "f1": 0.6811,
+      "accuracy": 0.6811,
+      "weightedPrecision": 0.6811,
+      "weightedRecall": 0.6811
+    },
+    {
+      "numTrees": 150,
+      "maxDepth": 10,
+      "minInstancesPerNode": 10,
+      "featureSubsetStrategy": "sqrt",
+      "areaUnderROC": 0.7362,
+      "areaUnderPR": 0.7215,
+      "f1": 0.6811,
+      "accuracy": 0.6811,
+      "weightedPrecision": 0.6811,
+      "weightedRecall": 0.6811
+    },
+    {
       "numTrees": 300,
       "maxDepth": 5,
       "minInstancesPerNode": 2,
       "featureSubsetStrategy": "sqrt",
-      "areaUnderROC": 0.7375,
-      "areaUnderPR": null,
-      "f1": null,
-      "accuracy": null,
-      "weightedPrecision": null,
-      "weightedRecall": null
-    },
-    "feature_importance": {
-      "model_1_name": "LogisticRegression",
-      "model_1": {
-        "top10_dense": [
-          {"feature": "question_count",         "coefficient": null, "abs": null},
-          {"feature": "is_early_access_review",  "coefficient": null, "abs": null},
-          {"feature": "review_created_datetime", "coefficient": null, "abs": null},
-          {"feature": "review_length_words",     "coefficient": null, "abs": null},
-          {"feature": "review_length_chars",     "coefficient": null, "abs": null},
-          {"feature": "exclamation_count",       "coefficient": null, "abs": null},
-          {"feature": "punctuation_count",       "coefficient": null, "abs": null},
-          {"feature": "helpfulness_ratio",       "coefficient": null, "abs": null},
-          {"feature": "review_age_days",         "coefficient": null, "abs": null}
-        ],
-        "dense_share": null,
-        "tfidf_share": null
-      },
-      "model_2_name": "RandomForestClassifier",
-      "model_2": {
-        "top10_dense": [
-          {"feature": "review_created_datetime", "importance": null},
-          {"feature": "review_length_chars",     "importance": null},
-          {"feature": "review_length_words",     "importance": null},
-          {"feature": "exclamation_count",       "importance": null},
-          {"feature": "is_early_access_review",  "importance": null},
-          {"feature": "punctuation_count",       "importance": null},
-          {"feature": "question_count",          "importance": null},
-          {"feature": "helpfulness_ratio",       "importance": null},
-          {"feature": "review_age_days",         "importance": null}
-        ],
-        "dense_share": null,
-        "tfidf_share": null
-      },
-      "overlapping_top10": [
-        "review_created_datetime",
-        "review_length_words",
-        "review_length_chars",
-        "is_early_access_review",
-        "exclamation_count",
-        "punctuation_count",
-        "question_count",
-        "helpfulness_ratio",
-        "review_age_days"
-      ]
-    },
-    "evaluation": {
-      "selected_model": "RandomForestClassifier",
-      "selected_model_metric": 0.7375,
-      "runner_up_model": "LogisticRegression",
-      "runner_up_metric": 0.6833,
-      "metric_name": "areaUnderROC",
-      "metric_gap": 0.0542,
-      "model_comparison": "The RandomForestClassifier outperformed the LogisticRegression model with a higher areaUnderROC of 0.7375 compared to 0.6833. This indicates that the RandomForest model is better at distinguishing between positive and negative reviews, likely due to its ability to capture complex interactions between features through its ensemble learning approach.",
-      "feature_importance_analysis": "The most important features across both models include review_created_datetime, review_length_words, and review_length_chars. These features suggest that the timing of the review and the length of the review text are significant indicators of sentiment, with longer reviews potentially providing more context for positive or negative sentiments.",
-      "feature_importance_deep_dive": [
+      "areaUnderROC": 0.7261,
+      "areaUnderPR": 0.708,
+      "f1": 0.6743,
+      "accuracy": 0.6744,
+      "weightedPrecision": 0.6747,
+      "weightedRecall": 0.6744
+    }
+  ],
+  "LogisticRegression_best": {
+    "regParam": 100.0,
+    "maxIter": 100,
+    "elasticNetParam": 0.0,
+    "areaUnderROC": 0.6833,
+    "areaUnderPR": 0.6662,
+    "f1": 0.5087,
+    "accuracy": 0.5619,
+    "weightedPrecision": 0.6107,
+    "weightedRecall": 0.5619
+  },
+  "RandomForestClassifier_best": {
+    "numTrees": 200,
+    "maxDepth": 15,
+    "minInstancesPerNode": 2,
+    "featureSubsetStrategy": "sqrt",
+    "areaUnderROC": 0.7375,
+    "areaUnderPR": 0.7235,
+    "f1": 0.6811,
+    "accuracy": 0.6811,
+    "weightedPrecision": 0.6811,
+    "weightedRecall": 0.6811
+  },
+  "feature_importance": {
+    "model_1_name": "LogisticRegression",
+    "model_1": {
+      "top10_dense": [
         {
-          "feature": "review_created_datetime",
-          "model_1_rank": 3,
-          "model_2_rank": 1,
-          "interpretation": "This feature indicates that the timing of the review can influence its sentiment, possibly reflecting trends in game updates or community sentiment."
-        },
-        {
-          "feature": "review_length_words",
-          "model_1_rank": 4,
-          "model_2_rank": 3,
-          "interpretation": "Longer reviews may provide more detailed feedback, which can correlate with positive or negative experiences."
-        },
-        {
-          "feature": "review_length_chars",
-          "model_1_rank": 5,
-          "model_2_rank": 2,
-          "interpretation": "Similar to review length in words, character count suggests that more extensive reviews may indicate stronger opinions."
+          "feature": "question_count",
+          "coefficient": -0.002495,
+          "abs": 0.002495
         },
         {
           "feature": "is_early_access_review",
-          "model_1_rank": 2,
-          "model_2_rank": 5,
-          "interpretation": "Reviews from early access may reflect different expectations and experiences, impacting their positivity."
+          "coefficient": -0.001026,
+          "abs": 0.001026
         },
         {
-          "feature": "exclamation_count",
-          "model_1_rank": 6,
-          "model_2_rank": 4,
-          "interpretation": "The use of exclamations can signal enthusiasm or frustration, influencing the review's sentiment."
+          "feature": "review_created_datetime",
+          "coefficient": 0.000507,
+          "abs": 0.000507
+        },
+        {
+          "feature": "review_length_words",
+          "coefficient": -1.1e-05,
+          "abs": 1.1e-05
+        },
+        {
+          "feature": "review_length_chars",
+          "coefficient": -2e-06,
+          "abs": 2e-06
         },
         {
           "feature": "punctuation_count",
-          "model_1_rank": 7,
-          "model_2_rank": 6,
-          "interpretation": "Punctuation may indicate the emotional tone of the review, with varied usage suggesting different sentiments."
+          "coefficient": 0.0,
+          "abs": 0.0
+        },
+        {
+          "feature": "exclamation_count",
+          "coefficient": 0.0,
+          "abs": 0.0
+        }
+      ],
+      "dense_share": 1.0,
+      "tfidf_share": 0.0
+    },
+    "model_2_name": "RandomForestClassifier",
+    "model_2": {
+      "top10_dense": [
+        {
+          "feature": "review_created_datetime",
+          "importance": 0.345879
+        },
+        {
+          "feature": "review_length_chars",
+          "importance": 0.302949
+        },
+        {
+          "feature": "review_length_words",
+          "importance": 0.255317
+        },
+        {
+          "feature": "exclamation_count",
+          "importance": 0.075316
+        },
+        {
+          "feature": "is_early_access_review",
+          "importance": 0.02054
+        },
+        {
+          "feature": "punctuation_count",
+          "importance": 0.0
         },
         {
           "feature": "question_count",
-          "model_1_rank": 1,
-          "model_2_rank": 7,
-          "interpretation": "The presence of questions may indicate uncertainty or engagement with the game's community, affecting sentiment."
+          "importance": 0.0
         }
       ],
-      "dense_vs_tfidf_interpretation": "The analysis indicates that this is primarily a metadata problem, as both models relied solely on dense features without incorporating TF-IDF, suggesting that the review's context and characteristics are more influential than the specific text content.",
-      "domain_insights": [
-        "Longer reviews tend to provide more context and detail, which can lead to more informed recommendations.",
-        "The timing of reviews can reflect community sentiment and game updates, influencing how players perceive the game.",
-        "Early access reviews may have different expectations, impacting their positivity compared to fully released games."
-      ],
-      "answer_to_problem_statement": "The strongest factors driving Steam review classification are the timing of the review, the length of the review, and whether the review is from an early access period.",
-      "limitations": [
-        "The analysis is limited to the features available and may not capture all relevant factors influencing review sentiment.",
-        "The models may not generalize well to different genres or types of games on Steam.",
-        "The reliance on dense features means that potential insights from text analysis were not explored."
-      ],
-      "practical_implications": "Game developers should focus on encouraging detailed reviews and consider the timing of their updates to influence community sentiment positively. Steam could enhance its review system by highlighting the importance of review length and timing in user prompts.",
-      "narrative": "This evaluation aimed to uncover the factors driving positive and negative Steam reviews through a comparative analysis of two classification models: Logistic Regression and Random Forest. The Random Forest model outperformed Logistic Regression, demonstrating its ability to capture complex relationships between features. Feature importance analysis revealed that review length, timing, and early access status are critical indicators of sentiment. These insights provide valuable guidance for game developers and the Steam platform to enhance user engagement and improve review quality. However, the analysis is limited by the features considered and the potential lack of generalizability across different game types.",
-      "reasoning": "The evaluation process involved comparing model performance metrics to determine the best-performing model. Feature importance was analyzed to understand the driving factors behind review sentiment, focusing on the implications of each feature in the context of Steam. The insights gained were then synthesized into practical recommendations for developers and the platform, while also acknowledging the limitations of the analysis."
-    }
+      "dense_share": 1.0,
+      "tfidf_share": 0.0
+    },
+    "overlapping_top10": [
+      "is_early_access_review",
+      "review_length_chars",
+      "review_length_words",
+      "review_created_datetime",
+      "punctuation_count",
+      "exclamation_count",
+      "question_count"
+    ]
+  },
+  "evaluation": {
+    "selected_model": "RandomForestClassifier",
+    "selected_model_metric": 0.7375,
+    "runner_up_model": "LogisticRegression",
+    "runner_up_metric": 0.6833,
+    "metric_name": "areaUnderROC",
+    "metric_gap": 0.0542,
+    "model_comparison": "The RandomForestClassifier outperformed the LogisticRegression model with a higher areaUnderROC of 0.7375 compared to 0.6833. This indicates that the RandomForest model is better at distinguishing between positive and negative reviews, likely due to its ability to capture complex interactions between features through its ensemble learning approach.",
+    "feature_importance_analysis": "The most important features across both models include review_created_datetime, review_length_words, and review_length_chars. These features suggest that the timing of the review and the length of the review text are significant indicators of sentiment, with longer reviews potentially providing more context for positive or negative sentiments.",
+    "feature_importance_deep_dive": [
+      {
+        "feature": "review_created_datetime",
+        "model_1_rank": 3,
+        "model_2_rank": 1,
+        "interpretation": "This feature indicates that the timing of the review can influence its sentiment, possibly reflecting trends in game updates or community sentiment."
+      },
+      {
+        "feature": "review_length_words",
+        "model_1_rank": 4,
+        "model_2_rank": 3,
+        "interpretation": "Longer reviews may provide more detailed feedback, which can correlate with positive or negative experiences."
+      },
+      {
+        "feature": "review_length_chars",
+        "model_1_rank": 5,
+        "model_2_rank": 2,
+        "interpretation": "Similar to review length in words, character count suggests that more extensive reviews may indicate stronger opinions."
+      },
+      {
+        "feature": "is_early_access_review",
+        "model_1_rank": 2,
+        "model_2_rank": 5,
+        "interpretation": "Reviews from early access may reflect different expectations and experiences, impacting their positivity."
+      },
+      {
+        "feature": "exclamation_count",
+        "model_1_rank": 6,
+        "model_2_rank": 4,
+        "interpretation": "The use of exclamations can signal enthusiasm or frustration, influencing the review's sentiment."
+      },
+      {
+        "feature": "punctuation_count",
+        "model_1_rank": 7,
+        "model_2_rank": 6,
+        "interpretation": "Punctuation may indicate the emotional tone of the review, with varied usage suggesting different sentiments."
+      },
+      {
+        "feature": "question_count",
+        "model_1_rank": 1,
+        "model_2_rank": 7,
+        "interpretation": "The presence of questions may indicate uncertainty or engagement with the game's community, affecting sentiment."
+      }
+    ],
+    "dense_vs_tfidf_interpretation": "The analysis indicates that this is primarily a metadata problem, as both models relied solely on dense features without incorporating TF-IDF, suggesting that the review's context and characteristics are more influential than the specific text content.",
+    "domain_insights": [
+      "Longer reviews tend to provide more context and detail, which can lead to more informed recommendations.",
+      "The timing of reviews can reflect community sentiment and game updates, influencing how players perceive the game.",
+      "Early access reviews may have different expectations, impacting their positivity compared to fully released games."
+    ],
+    "answer_to_problem_statement": "The strongest factors driving Steam review classification are the timing of the review, the length of the review, and whether the review is from an early access period.",
+    "limitations": [
+      "The analysis is limited to the features available and may not capture all relevant factors influencing review sentiment.",
+      "The models may not generalize well to different genres or types of games on Steam.",
+      "The reliance on dense features means that potential insights from text analysis were not explored."
+    ],
+    "practical_implications": "Game developers should focus on encouraging detailed reviews and consider the timing of their updates to influence community sentiment positively. Steam could enhance its review system by highlighting the importance of review length and timing in user prompts.",
+    "narrative": "This evaluation aimed to uncover the factors driving positive and negative Steam reviews through a comparative analysis of two classification models: Logistic Regression and Random Forest. The Random Forest model outperformed Logistic Regression, demonstrating its ability to capture complex relationships between features. Feature importance analysis revealed that review length, timing, and early access status are critical indicators of sentiment. These insights provide valuable guidance for game developers and the Steam platform to enhance user engagement and improve review quality. However, the analysis is limited by the features considered and the potential lack of generalizability across different game types.",
+    "reasoning": "The evaluation process involved comparing model performance metrics to determine the best-performing model. Feature importance was analyzed to understand the driving factors behind review sentiment, focusing on the implications of each feature in the context of Steam. The insights gained were then synthesized into practical recommendations for developers and the platform, while also acknowledging the limitations of the analysis."
   }
+}

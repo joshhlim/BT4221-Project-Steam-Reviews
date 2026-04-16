@@ -86,70 +86,91 @@
       "transformations": [
         {
           "description": "Calculate the length of each review in characters.",
-          "input_columns": ["review"],
+          "input_columns": [
+            "review"
+          ],
           "output_column": "review_length_chars",
           "operation": "len(review)",
           "justification": "The mean length of positive reviews is significantly shorter than that of negative reviews, indicating that review length may correlate with sentiment."
         },
         {
           "description": "Calculate the length of each review in words.",
-          "input_columns": ["review"],
+          "input_columns": [
+            "review"
+          ],
           "output_column": "review_length_words",
           "operation": "len(review.split())",
           "justification": "Similar to character length, word count can provide insights into sentiment, as positive reviews tend to be shorter on average."
         },
         {
           "description": "Count the number of punctuation marks in each review.",
-          "input_columns": ["review"],
+          "input_columns": [
+            "review"
+          ],
           "output_column": "punctuation_count",
           "operation": "sum(1 for char in review if char in string.punctuation)",
           "justification": "Punctuation usage may indicate emotional intensity or sentiment, which can be relevant for classification."
         },
         {
           "description": "Count the number of exclamation marks in each review.",
-          "input_columns": ["review"],
+          "input_columns": [
+            "review"
+          ],
           "output_column": "exclamation_count",
           "operation": "sum(1 for char in review if char == '!')",
           "justification": "Exclamation marks can indicate strong sentiment, which may correlate with positive or negative reviews."
         },
         {
           "description": "Count the number of question marks in each review.",
-          "input_columns": ["review"],
+          "input_columns": [
+            "review"
+          ],
           "output_column": "question_count",
           "operation": "sum(1 for char in review if char == '?')",
           "justification": "Questions may reflect uncertainty or critique, which could be associated with negative sentiment."
         },
         {
           "description": "Extract the timestamp of when the review was created and convert it to a datetime object.",
-          "input_columns": ["timestamp_created"],
+          "input_columns": [
+            "timestamp_created"
+          ],
           "output_column": "review_created_datetime",
           "operation": "datetime.fromtimestamp(timestamp_created)",
           "justification": "Converting timestamps to datetime allows for further temporal analysis, such as extracting features like review age."
         },
         {
           "description": "Calculate the age of the review in days.",
-          "input_columns": ["review_created_datetime"],
+          "input_columns": [
+            "review_created_datetime"
+          ],
           "output_column": "review_age_days",
           "operation": "(current_date - review_created_datetime).days",
           "justification": "Review age may influence sentiment, as more recent reviews could reflect current game quality."
         },
         {
           "description": "Calculate the ratio of helpful votes to total votes.",
-          "input_columns": ["votes_helpful", "votes_funny"],
+          "input_columns": [
+            "votes_helpful",
+            "votes_funny"
+          ],
           "output_column": "helpfulness_ratio",
           "operation": "votes_helpful / (votes_helpful + votes_funny + 1)",
           "justification": "This ratio can provide a normalized measure of how helpful a review is perceived to be, which may correlate with sentiment."
         },
         {
           "description": "Create a binary feature indicating whether the review was written during early access.",
-          "input_columns": ["written_during_early_access"],
+          "input_columns": [
+            "written_during_early_access"
+          ],
           "output_column": "is_early_access_review",
           "operation": "written_during_early_access",
           "justification": "Reviews written during early access may have different sentiment characteristics compared to those written after full release."
         },
         {
           "description": "Drop the raw review text column after extracting features.",
-          "input_columns": ["review"],
+          "input_columns": [
+            "review"
+          ],
           "output_column": null,
           "operation": "drop column",
           "justification": "The raw review text is no longer needed after extracting numerical features and could cause errors if included in the model."
@@ -229,11 +250,23 @@
       "exclamation_count",
       "question_count",
       "review_created_datetime",
-      "review_age_days",
-      "helpfulness_ratio",
       "is_early_access_review"
     ],
-    "skipped_instructions": []
+    "skipped_instructions": [
+      {
+        "type": "time_diff",
+        "col_a": "current_date",
+        "col_b": "review_created_datetime",
+        "output": "review_age_days"
+      },
+      {
+        "type": "ratio",
+        "numerator": "votes_helpful",
+        "denominator": "votes_helpful + votes_funny",
+        "output": "helpfulness_ratio",
+        "smoothing": 1
+      }
+    ]
   },
   "model_config": {
     "raw": {
@@ -242,22 +275,77 @@
         "name": "Logistic Regression",
         "why_chosen": "Logistic Regression is well-suited for binary classification tasks and provides interpretable coefficients that indicate the influence of each feature on the prediction. Given the presence of dense features and the need for interpretability, this model allows us to understand how each feature contributes to the likelihood of a review being positive or negative.",
         "hyperparameter_configs": [
-          {"C": 0.01, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
-          {"C": 0.1, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
-          {"C": 1.0, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
-          {"C": 10.0, "solver": "liblinear", "max_iter": 100, "penalty": "l2"},
-          {"C": 1.0, "solver": "saga", "max_iter": 100, "penalty": "l2"}
+          {
+            "C": 0.01,
+            "solver": "liblinear",
+            "max_iter": 100,
+            "penalty": "l2"
+          },
+          {
+            "C": 0.1,
+            "solver": "liblinear",
+            "max_iter": 100,
+            "penalty": "l2"
+          },
+          {
+            "C": 1.0,
+            "solver": "liblinear",
+            "max_iter": 100,
+            "penalty": "l2"
+          },
+          {
+            "C": 10.0,
+            "solver": "liblinear",
+            "max_iter": 100,
+            "penalty": "l2"
+          },
+          {
+            "C": 1.0,
+            "solver": "saga",
+            "max_iter": 100,
+            "penalty": "l2"
+          }
         ]
       },
       "model_2": {
         "name": "Random Forest Classifier",
         "why_chosen": "Random Forest is a robust ensemble method that can handle both dense and sparse features effectively. It provides Gini importance scores, which help in understanding the contribution of each feature to the model's predictions. This model is particularly useful for capturing non-linear relationships in the data while still allowing for interpretability through feature importance analysis.",
         "hyperparameter_configs": [
-          {"n_estimators": 100, "max_depth": 10, "min_samples_split": 2, "min_samples_leaf": 1, "max_features": "sqrt"},
-          {"n_estimators": 200, "max_depth": 15, "min_samples_split": 2, "min_samples_leaf": 1, "max_features": "sqrt"},
-          {"n_estimators": 100, "max_depth": 20, "min_samples_split": 5, "min_samples_leaf": 2, "max_features": "log2"},
-          {"n_estimators": 150, "max_depth": 10, "min_samples_split": 10, "min_samples_leaf": 1, "max_features": "sqrt"},
-          {"n_estimators": 300, "max_depth": 5, "min_samples_split": 2, "min_samples_leaf": 1, "max_features": "sqrt"}
+          {
+            "n_estimators": 100,
+            "max_depth": 10,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "max_features": "sqrt"
+          },
+          {
+            "n_estimators": 200,
+            "max_depth": 15,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "max_features": "sqrt"
+          },
+          {
+            "n_estimators": 100,
+            "max_depth": 20,
+            "min_samples_split": 5,
+            "min_samples_leaf": 2,
+            "max_features": "log2"
+          },
+          {
+            "n_estimators": 150,
+            "max_depth": 10,
+            "min_samples_split": 10,
+            "min_samples_leaf": 1,
+            "max_features": "sqrt"
+          },
+          {
+            "n_estimators": 300,
+            "max_depth": 5,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "max_features": "sqrt"
+          }
         ]
       },
       "primary_metric": "F1 Score",
@@ -269,11 +357,31 @@
         "pyspark_class": "LogisticRegression",
         "original_name": "Logistic Regression",
         "configs": [
-          {"regParam": 100.0, "maxIter": 100, "elasticNetParam": 0.0},
-          {"regParam": 10.0,  "maxIter": 100, "elasticNetParam": 0.0},
-          {"regParam": 1.0,   "maxIter": 100, "elasticNetParam": 0.0},
-          {"regParam": 0.1,   "maxIter": 100, "elasticNetParam": 0.0},
-          {"regParam": 1.0,   "maxIter": 100, "elasticNetParam": 0.0}
+          {
+            "regParam": 100.0,
+            "maxIter": 100,
+            "elasticNetParam": 0.0
+          },
+          {
+            "regParam": 10.0,
+            "maxIter": 100,
+            "elasticNetParam": 0.0
+          },
+          {
+            "regParam": 1.0,
+            "maxIter": 100,
+            "elasticNetParam": 0.0
+          },
+          {
+            "regParam": 0.1,
+            "maxIter": 100,
+            "elasticNetParam": 0.0
+          },
+          {
+            "regParam": 1.0,
+            "maxIter": 100,
+            "elasticNetParam": 0.0
+          }
         ],
         "mapping_notes": "Mapped 'C' to 'regParam' as the inverse of regularization strength. 'max_iter' is mapped to 'maxIter'. 'penalty' is represented by 'elasticNetParam' where 'l2' corresponds to 0.0."
       },
@@ -281,17 +389,45 @@
         "pyspark_class": "RandomForestClassifier",
         "original_name": "Random Forest Classifier",
         "configs": [
-          {"numTrees": 100, "maxDepth": 10, "minInstancesPerNode": 2,  "featureSubsetStrategy": "sqrt"},
-          {"numTrees": 200, "maxDepth": 15, "minInstancesPerNode": 2,  "featureSubsetStrategy": "sqrt"},
-          {"numTrees": 100, "maxDepth": 10, "minInstancesPerNode": 5,  "featureSubsetStrategy": "log2"},
-          {"numTrees": 150, "maxDepth": 10, "minInstancesPerNode": 10, "featureSubsetStrategy": "sqrt"},
-          {"numTrees": 300, "maxDepth": 5,  "minInstancesPerNode": 2,  "featureSubsetStrategy": "sqrt"}
+          {
+            "numTrees": 100,
+            "maxDepth": 10,
+            "minInstancesPerNode": 2,
+            "featureSubsetStrategy": "sqrt"
+          },
+          {
+            "numTrees": 200,
+            "maxDepth": 15,
+            "minInstancesPerNode": 2,
+            "featureSubsetStrategy": "sqrt"
+          },
+          {
+            "numTrees": 100,
+            "maxDepth": 10,
+            "minInstancesPerNode": 5,
+            "featureSubsetStrategy": "log2"
+          },
+          {
+            "numTrees": 150,
+            "maxDepth": 10,
+            "minInstancesPerNode": 10,
+            "featureSubsetStrategy": "sqrt"
+          },
+          {
+            "numTrees": 300,
+            "maxDepth": 5,
+            "minInstancesPerNode": 2,
+            "featureSubsetStrategy": "sqrt"
+          }
         ],
         "mapping_notes": "Mapped 'n_estimators' to 'numTrees', 'max_depth' to 'maxDepth', 'min_samples_split' to 'minInstancesPerNode', and 'max_features' to 'featureSubsetStrategy'."
       },
       "primary_metric": "areaUnderROC",
       "primary_metric_evaluator": "binary",
-      "secondary_metrics": ["f1", "accuracy"],
+      "secondary_metrics": [
+        "f1",
+        "accuracy"
+      ],
       "unresolvable": [],
       "translation_notes": "All chosen models and hyperparameters have been successfully mapped to their corresponding PySpark MLlib equivalents. The primary metric is set to areaUnderROC, which is suitable for binary classification tasks."
     }
